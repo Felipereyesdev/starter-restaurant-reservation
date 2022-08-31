@@ -3,7 +3,10 @@ import { useHistory } from "react-router";
 import { createRes } from "../utils/api";
 export default function CreationForm({setDate}) {
 
-  const history = useHistory()
+  const history = useHistory();
+  const [Tuesday, setTuesday] = useState(false);
+  const [pastTuesday, setpastTuesday] = useState(false);
+  const [pastDate, setpastDate] = useState(false);
 
   const [newReservation, setNewReservation] = useState({
     first_name: "",
@@ -26,6 +29,22 @@ export default function CreationForm({setDate}) {
     event.preventDefault();
     newReservation.people = Number(newReservation.people); //to change string to number so that it fits the api criteria
     // console.log(newReservation.people);
+    const day = new Date(newReservation.reservation_date)
+    const dayOf = day.getUTCDay();
+    const currentDate = new Date();
+    if(dayOf === 2 && currentDate){
+      setpastTuesday(true);
+      return
+    }
+    if(dayOf === 2 ){
+      // window.alert('Tuesday is closed')
+      setTuesday(true)
+      return 
+    }
+    if( day < currentDate ){
+      setpastDate(true)
+      return
+    }
     console.log(newReservation.reservation_date)
     createRes(newReservation)
     setDate(newReservation.reservation_date)
@@ -33,6 +52,8 @@ export default function CreationForm({setDate}) {
     // console.log(newReservation.reservation_date);
     // console.log("called", newReservation);
   };
+
+ 
 
   return (
     <>
@@ -55,6 +76,9 @@ export default function CreationForm({setDate}) {
           required
           />
       </div>
+      {pastTuesday=== true ? (<p className="alert alert-danger">Tuesday's is closed and must be future date</p>): null}
+      {Tuesday=== true ? (<p className="alert alert-danger">Tuesday's is closed</p>): null}
+      {pastDate=== true ? (<p className="alert alert-danger">must be future date</p>): null}
       <div>
         <input
           type="string"
