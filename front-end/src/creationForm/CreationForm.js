@@ -7,6 +7,7 @@ export default function CreationForm({setDate}) {
   const [Tuesday, setTuesday] = useState(false);
   const [pastTuesday, setpastTuesday] = useState(false);
   const [pastDate, setpastDate] = useState(false);
+  const [storeClsed, setstoreClosed] = useState(false);
 
   const [newReservation, setNewReservation] = useState({
     first_name: "",
@@ -31,6 +32,7 @@ export default function CreationForm({setDate}) {
     // console.log(newReservation.people);
     const day = new Date(newReservation.reservation_date)
     const dayOf = day.getUTCDay();
+    const time = newReservation.reservation_time;
     const currentDate = new Date();
     if(dayOf === 2 && currentDate){
       setpastTuesday(true);
@@ -44,6 +46,18 @@ export default function CreationForm({setDate}) {
     if( day < currentDate ){
       setpastDate(true)
       return
+    }
+
+    if(currentDate < time){
+      setstoreClosed(true);
+      return
+
+    }
+
+    if(time < '10:30' || time > '20:30'){
+      setstoreClosed(true);
+      return;
+
     }
     console.log(newReservation.reservation_date)
     createRes(newReservation)
@@ -79,6 +93,7 @@ export default function CreationForm({setDate}) {
       {pastTuesday=== true ? (<p className="alert alert-danger">Tuesday's is closed and must be future date</p>): null}
       {Tuesday=== true ? (<p className="alert alert-danger">Tuesday's is closed</p>): null}
       {pastDate=== true ? (<p className="alert alert-danger">must be future date</p>): null}
+      {storeClsed=== true ? (<p className="alert alert-danger">Must make reservations within restaurant hours</p>): null}
       <div>
         <input
           type="string"
