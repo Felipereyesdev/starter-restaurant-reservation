@@ -78,6 +78,19 @@
   return next()
  }
 
+ function openHours(req, res, next) {
+  const {data = {}} = req.body
+  const time = data.reservation_time
+  const currentTime = new Date()
+  if(currentTime<time){
+    return next({ status: 400, message: `please make reservation for a time after current time`})
+  }
+  if(time < '10:30' || time > '20:30'){
+    return next({ status: 400, message: `Hours of operation are between 10:30AM to 09:30PM, latest reservations 1 hour before closing`})
+  }
+  return next()
+ }
+
 
  
  module.exports = {
@@ -93,6 +106,7 @@
      bodyDataHas("people"),
      isNumber("reservation_date"),
      isTime("reservation_time"),
+     openHours,
      isPeopleNumber,
      asyncErrorBoundary(create),
    ],
