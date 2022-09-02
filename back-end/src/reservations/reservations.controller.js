@@ -12,6 +12,23 @@
      data
    });
  }
+
+ async function read(req, res) {
+  res.json({ data: res.locals.reservation })
+}
+
+async function reservationExists(req, res, next) {
+  const reservation = await service.read(req.params.reservation_Id)
+  if(reservation){
+    res.locals.reservation = reservation;
+    return next()
+  }
+  next({
+    status: 404,
+    message: `Reservation cannot be found.`
+  })
+}
+
  async function create(req, res) {
    const data = await service.create(req.body.data);
    res.status(201).json({ data });
@@ -70,7 +87,7 @@
 
  function isFutureRes(req,res,next){
   const {data = {}} = req.body
-  const day = new Date(data.reservation_date)
+  const day = new Date(`${data.reservation_date} ${data.reservation_time} `)
   const today = new Date() // empty argument = current
   if(day<today){
     return next({status: 400, message: 'Needs to be future date'})
@@ -110,4 +127,5 @@
      isPeopleNumber,
      asyncErrorBoundary(create),
    ],
+   read:[asyncErrorBoundary(reservationExists),read]
  };
