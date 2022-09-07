@@ -60,6 +60,7 @@ export default function SeatComponent() {
     <form onSubmit={submitHandler}>
       <select name="table_id" value={tableId} onChange={handleChange}>
         {tablesForm}
+        <option>none</option>
       </select>
       <button type="submit">Submit</button>
       <button type="button" onClick={() => history.goBack()}>
