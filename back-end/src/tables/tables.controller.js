@@ -4,14 +4,12 @@ const resService = require("../reservations/reservations.service")
 
 async function list(req, res) {
   const data = await service.list()
-  // console.log(data)
   res.json ({
     data
   })
 }
 
-async function readTable( req, res, next) {
-  // console.log(req.params)
+async function tableExists( req, res, next) {
   const data = await service.read(req.params.table_id)
   if(data) {
     res.locals.table = data
@@ -20,7 +18,7 @@ async function readTable( req, res, next) {
   return next({ status: 404, message: `${req.params.table_id} not found`})
 }
 
-async function readRes(req, res, next) {
+async function resExists(req, res, next) {
   const data = await resService.read(req.body.data.reservation_id)
   if(data){
     res.locals.reservation = data
@@ -45,6 +43,8 @@ async function update(req, res) {
   const data = await service.update(updatedTable)
   res.json({ data })
 }
+
+
 
 function bodyDataHas(propertyName) {
   return function (req, res, next) {
@@ -75,23 +75,38 @@ function isInteger(req,res,next) {
 
 
 function capacity(req,res,next) {
+  console.log('capacity',res.locals.reservation)
   const reservation = res.locals.reservation.people
   const table = res.locals.table.capacity
   if( reservation > table ){
     return next({ status : 400, message: `table does not have sufficient capacity`})
   }
-  // console.log('test',data)
   return next()
 }
 
-function occupied(req,res,next){
-  // console.log('data', req.body)
-  // console.log('info',res.locals.reservation, res.locals.table)
+function notOccupied(req,res,next){
   let occupied = res.locals.table.reservation_id
   if(occupied){
     return next( {status: 400, message: `table is occupied`})
   }
   return next()
+}
+function occupied(req,res,next){
+  let occupied = res.locals.table.reservation_id
+  if(!occupied){
+    return next( {status: 400, message: `table is not occupied`})
+  }
+  return next()
+}
+
+async function removeResId(req, res) {
+  const tableId = req.params.table_id
+  const updatedTable = {
+    reservation_id: null,
+    table_id: tableId
+  }
+  const data = await service.update(updatedTable)
+  res.json({ data })
 }
 
 module.exports = {
@@ -106,9 +121,14 @@ module.exports = {
   // read: [readRes,read],
   update: [
     asyncErrorBoundary(bodyDataHas("reservation_id")),
-    asyncErrorBoundary(readRes),
-    asyncErrorBoundary(readTable),
+    asyncErrorBoundary(resExists),
+    asyncErrorBoundary(tableExists),
     asyncErrorBoundary(capacity),
-    asyncErrorBoundary(occupied),
-    asyncErrorBoundary(update)]
+    asyncErrorBoundary(notOccupied),
+    asyncErrorBoundary(update)],
+    delete: [
+      asyncErrorBoundary(tableExists),
+      asyncErrorBoundary(occupied),
+      removeResId
+    ]
 }
