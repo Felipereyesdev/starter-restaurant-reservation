@@ -1,7 +1,9 @@
 export default function ListReservations({ reservations, currentRes, setCurrentRes }) {
   // console.log('listResComp',reservations, 'currentRes',currentRes);
   console.log(reservations)
+  
   let list = reservations.map((reservation) => {
+    
     return (
       <div key={reservation.reservation_id}>
         <p>
@@ -22,10 +24,8 @@ export default function ListReservations({ reservations, currentRes, setCurrentR
         <p>
           <b>Reservation ID</b>: {reservation.reservation_id}
         </p>
-        <a href={`/reservations/${reservation.reservation_id}/seat`}>
-          {/* <button>Seat</button> */}
-          Seat
-        </a>
+        <p data-reservation-id-status={reservation.reservation_id}><b>Status</b>: {reservation.status} </p>
+        {reservation.status !== 'seated' ? <a href ={`/reservations/${reservation.reservation_id}/seat`}>seat</a>: null}
         <hr />
       </div>
     );
