@@ -25,7 +25,7 @@ async function reservationExists(req, res, next) {
   }
   next({
     status: 404,
-    message: `Reservation cannot be found.`
+    message: `Reservation cannot be found : ${req.params.reservation_Id}`
   })
 }
 
@@ -34,6 +34,18 @@ async function reservationExists(req, res, next) {
    res.status(201).json({ data });
  }
  
+ async function update(req, res) {
+  // console.log('in update')
+  const reservationId = req.params.reservation_Id
+  const resData = req.body.data
+  const updatedRes = {
+    ...resData,
+    reservation_id: reservationId
+  }
+  const data = await service.update(updatedRes)
+  res.json({data})
+ }
+
  function isNumber(propertyName) {
    return function (req, res, next) {
      const { data = {} } = req.body;
@@ -50,6 +62,7 @@ async function reservationExists(req, res, next) {
      const { data = {} } = req.body;
      const isTime = data[propertyName].replace(/:/g, "");
      if (Number(isTime)) {
+          //  if (Number(isTime) < 1030 || Number(isTime) > 930) 
        return next();
      }
      next({ status: 400, message: `${propertyName}` });
@@ -75,10 +88,10 @@ async function reservationExists(req, res, next) {
  }
  
  function isTuesday(req,res,next) {
-  console.log('hello',req)
+  // console.log('hello',req)
   const { data = {} } = req.body // gets the body of data from the JSON
   const day = new Date(data.reservation_date)
-  const dayOf = day.getUTCDay()
+  const dayOf = day.getUTCDay() // returns from 0-6 0 sunday ->
   if(dayOf === 2){
     return next({status: 400, message :`closed`})
   }
@@ -89,6 +102,7 @@ async function reservationExists(req, res, next) {
   const {data = {}} = req.body
   const day = new Date(`${data.reservation_date} ${data.reservation_time} `)
   const today = new Date() // empty argument = current
+  // console.log('today',today, 'day', day)
   if(day<today){
     return next({status: 400, message: 'Needs to be future date'})
   } 
@@ -108,24 +122,66 @@ async function reservationExists(req, res, next) {
   return next()
  }
 
+ function resStatus(req,res,next) {
+  const {data = {}} = req.body
+  const status = data.status
+  if(!status){
+    return next()
+  }
+  if(status !== 'booked')
+  return next({
+    status: 400,
+    message: status
+  })
+  return next()
+ }
 
+  function isFinished(req,res,next) {
+  let reservation = res.locals.reservation
+  if(reservation.status === 'finished'){
+    return next({
+      status: 400,
+      message: reservation.status
+    })
+  }
+  return next()
+ }
+
+ function validStatus(req,res,next){
+  let validStatuses = [`booked`, `seated`, `finished`]
+  const {data = {}} = req.body
+  const status = data.status
+  if(!(validStatuses.includes(status))){
+    return next({
+      status: 400,
+      message: 'unknown status'
+    })
+  }
+  return next()
+ }
  
  module.exports = {
    list: [asyncErrorBoundary(list)],
-   post: [
+   create: [
      bodyDataHas("first_name"),
      bodyDataHas("last_name"),
      bodyDataHas("mobile_number"),
      bodyDataHas("reservation_date"),
+    //  bodyDataHas("status"),
      isTuesday,
-     isFutureRes,
+     isPeopleNumber,
      bodyDataHas("reservation_time"),
      bodyDataHas("people"),
      isNumber("reservation_date"),
      isTime("reservation_time"),
+     isFutureRes,
      openHours,
-     isPeopleNumber,
+     resStatus,
      asyncErrorBoundary(create),
    ],
-   read:[asyncErrorBoundary(reservationExists),read]
+   read: [
+    asyncErrorBoundary(reservationExists), read
+   ],
+
+   update: [reservationExists, isFinished, validStatus, update]
  };

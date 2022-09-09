@@ -4,26 +4,38 @@ function list(){
     return knex("reservations").select("*").orderBy("reservations.reservation_time");
 }
 
-function read(reservationId){
-  return knex("reservations").select("*").where({ "reservation_id": reservationId }).first()
+function listDate(date){
+return knex("reservations")
+.select("*")
+.where({"reservations.reservation_date": date})
+.whereNot({"reservations.status": "finished"})
+.orderBy("reservations.reservation_time")
 }
 
-function listDate(date){
-return knex("reservations").select("*").where({"reservations.reservation_date": date}).orderBy("reservations.reservation_time")
+function read(reservationId){
+    return knex("reservations").select("*").where({ "reservation_id": reservationId }).first()
 }
+
+function update(reservation) {
+    return knex("reservations")
+    .where({ reservation_id: reservation.reservation_id })
+    .update(reservation)
+    .returning("*")
+    .then(reservationData=>reservationData[0])
+  }
 
 function create(newReservation) {
-    // Complete the implementation of this method.
-  //   return newCustomer;
     return knex("reservations")
     .insert(newReservation)
     .returning("*")
     .then(reservationData=>reservationData[0])
   }
 
+
 module.exports ={
     list,
-    read,
     listDate,
-    create
+    update,
+    create,
+    read
 }
