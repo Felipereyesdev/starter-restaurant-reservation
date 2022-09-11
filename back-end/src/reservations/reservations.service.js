@@ -12,6 +12,15 @@ return knex("reservations")
 .orderBy("reservations.reservation_time")
 }
 
+function listMobile(mobile) {
+  return knex("reservations")
+    .whereRaw(
+      "translate(mobile_number, '() -', '') like ?",
+      `%${mobile.replace(/\D/g, "")}%`
+    )
+    .orderBy("reservation_date");
+}
+
 function read(reservationId){
     return knex("reservations").select("*").where({ "reservation_id": reservationId }).first()
 }
@@ -35,6 +44,7 @@ function create(newReservation) {
 module.exports ={
     list,
     listDate,
+    listMobile,
     update,
     create,
     read
