@@ -7,6 +7,7 @@ import TableCreationForm from "../creationForm/TableCreationForm";
 import SeatComponent from "../SeatComponent/SeatComponent";
 import useQuery from "../utils/useQuery";
 import { today } from "../utils/date-time";
+import SearchComponent from "../dashboard/SearchComponent.";
 
 // import { today } from "../utils/date-time";
 
@@ -43,6 +44,10 @@ function Routes() {
       </Route>
       <Route path="/reservations/:reservation_id/seat">
       <SeatComponent />
+      </Route>
+      <Route path = "/search">
+        <SearchComponent/>
+
       </Route>
       <Route>
         <NotFound />
