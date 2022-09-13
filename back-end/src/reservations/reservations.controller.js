@@ -31,7 +31,7 @@
  
  async function reservationExists(req, res, next) {
    const reservation = await service.read(req.params.reservation_Id);
-   // console.log('**inreservationexists**',reservation)
+   console.log('**inreservationexists**',reservation)
    if (reservation) {
      res.locals.reservation = reservation;
      return next();
@@ -55,7 +55,7 @@
      reservation_id: reservationId,
    };
    const data = await service.update(updatedRes);
-   // console.log('inUpdate',data)
+   console.log('inUpdate',data)
    res.status(200).json({ data });
  }
  
@@ -156,7 +156,7 @@
  }
  
  function isFinished(req, res, next) {
-   // console.log('inIsFinished')
+   console.log('inIsFinished')
    let reservation = res.locals.reservation;
    if (reservation.status === "finished") {
      return next({
@@ -168,7 +168,7 @@
  }
  
  function validStatus(req, res, next) {
-   // console.log('inValidStatus')
+   console.log('inValidStatus')
    let validStatuses = [`booked`, `seated`, `finished`, `cancelled`];
    const { data = {} } = req.body;
    const status = data.status;
