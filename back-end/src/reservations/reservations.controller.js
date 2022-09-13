@@ -31,6 +31,7 @@
  
  async function reservationExists(req, res, next) {
    const reservation = await service.read(req.params.reservation_Id);
+   // console.log('**inreservationexists**',reservation)
    if (reservation) {
      res.locals.reservation = reservation;
      return next();
@@ -47,7 +48,6 @@
  }
  
  async function update(req, res) {
-   // console.log('in update')
    const reservationId = req.params.reservation_Id;
    const resData = req.body.data;
    const updatedRes = {
@@ -55,7 +55,8 @@
      reservation_id: reservationId,
    };
    const data = await service.update(updatedRes);
-   res.json({ data });
+   // console.log('inUpdate',data)
+   res.status(200).json({ data });
  }
  
  function isNumber(propertyName) {
@@ -155,6 +156,7 @@
  }
  
  function isFinished(req, res, next) {
+   // console.log('inIsFinished')
    let reservation = res.locals.reservation;
    if (reservation.status === "finished") {
      return next({
@@ -166,6 +168,7 @@
  }
  
  function validStatus(req, res, next) {
+   // console.log('inValidStatus')
    let validStatuses = [`booked`, `seated`, `finished`, `cancelled`];
    const { data = {} } = req.body;
    const status = data.status;
@@ -201,18 +204,18 @@
    read: [asyncErrorBoundary(reservationExists), read],
  
    update: [
-     reservationExists,
-     bodyDataHas("first_name"),
-     bodyDataHas("last_name"),
-     bodyDataHas("mobile_number"),
-     bodyDataHas("reservation_date"),
-     bodyDataHas("reservation_time"),
-     bodyDataHas("people"),
-     isPeopleNumber,
-     isNumber("reservation_date"),
-     isTime("reservation_time"),
-     update,
+     asyncErrorBoundary(reservationExists),
+     asyncErrorBoundary(bodyDataHas("first_name")),
+     asyncErrorBoundary(bodyDataHas("last_name")),
+     asyncErrorBoundary(bodyDataHas("mobile_number")),
+     asyncErrorBoundary(bodyDataHas("reservation_date")),
+     asyncErrorBoundary(bodyDataHas("reservation_time")),
+     asyncErrorBoundary(bodyDataHas("people")),
+     asyncErrorBoundary(isPeopleNumber),
+     asyncErrorBoundary(isNumber("reservation_date")),
+     asyncErrorBoundary(isTime("reservation_time")),
+     asyncErrorBoundary(update),
    ],
-   updateStatus: [reservationExists, isFinished, validStatus, update], //put
+   updateStatus: [reservationExists, isFinished, validStatus, asyncErrorBoundary(update)]
  };
  
