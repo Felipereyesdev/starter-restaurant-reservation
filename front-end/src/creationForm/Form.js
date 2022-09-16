@@ -7,6 +7,7 @@ export default function Form({
   submitHandler,
   newReservation,
   errors,
+  title,
 }) {
    
   const history = useHistory();
@@ -32,8 +33,12 @@ export default function Form({
   // console.log("formComponent", formData, newReservation);
   // console.log("line30 of formComponent", formData);
   return (
+    
     <>
-      <form onSubmit={(e) => submitHandler(e, formData)}>
+    
+      <form className="form" onSubmit={(e) => submitHandler(e, formData)}>
+      <h2 className="titles">{title}</h2>
+      <hr className="separator--line" />
         <div>
           <input
             name="first_name"
@@ -89,17 +94,20 @@ export default function Form({
           />
         </div>
         <ErrorAlert error={errors} />
-        <button type="submit">Submit</button>
+        <div>
+        <button type="submit" className="button-color-2">Submit</button>
 
         <button
           data-reservation-id-cancel={formData.reservation_id}
           type="button"
+          className="button-color-1"
           onClick={() => {
             history.go("-1");
           }}
         >
           Cancel
         </button>
+        </div>
       </form>
     </>
   );

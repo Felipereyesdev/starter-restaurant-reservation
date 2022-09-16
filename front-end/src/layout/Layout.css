@@ -1,4 +1,124 @@
 .side-bar {
-  background-color: #393a44;
+  background-color: #D9A8E6;
   min-width: 200px;
+ 
 }
+
+.separator--line{
+  border: 0;
+  border-bottom: 5px solid #D9A8E6;
+  width: 0;
+  -webkit-animation: separator-width 1s ease-out forwards;
+  animation: separator-width 1s ease-out forwards ;
+
+}
+
+@-webkit-keyframes separator-width{
+  0%{
+    width: 0;
+  }
+
+  100%{
+    width: 100%;
+  }
+}
+
+@keyframes separator-width{
+  0%{
+    width: 0;
+  }
+
+  100%{
+    width: 100%;
+  
+  }
+}
+
+.background-color{
+  background-color: white;
+  min-height: 100vh;
+  margin-top: -8;
+  
+}
+
+.header-test{
+  background-color: white;
+  font-family: Poppins;
+  
+ 
+}
+
+.header-test button:hover{
+  background-color: #D9A8E6;
+}
+
+
+
+.reservations{
+  font-family: Poppins;
+  background-color: white;
+  border-radius: 20px;
+}
+
+.reservations p b{
+  color: #D9A8E6;
+
+}
+
+.reservations button:hover{
+  background-color: #D9A8E6;
+}
+
+.tables{
+  font-family: Poppins;
+  background-color: white;
+  border-radius: 25px;
+}
+
+.tables button:hover{
+  background-color: #D9A8E6;
+}
+
+.tables p{
+ 
+  font-size: 10px;
+  
+}
+.tables p b{
+  color: #D9A8E6;
+
+}
+
+.titles{
+  color: #D9A8E6;
+}
+
+/* reservation form style */
+
+.form{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+  
+}
+
+.form button:hover{
+  background-color: #D9A8E6;
+}
+
+.button-color-1{
+  background-color: #E6AF9C;
+}
+
+.button-color-2{
+  background-color: #EDFFD1;
+}
+
+.button-color-3{
+  background-color: #C9C9C9;
+}
+
+
+
+

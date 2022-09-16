@@ -30,9 +30,11 @@ export default function SearchComponent(){
   return (
     <>
     <form
+    className="form"
     onSubmit={submitHandler}
     >
-      <label>Mobile Number</label> <input onChange={handleChange} type="search" name="mobile_number" placeholder="Enter a customer's phone number"></input> <button type="submit">Find</button>
+      <hr className="separator--line" />
+      <h2 className="titles">Mobile Number</h2> <input onChange={handleChange} type="search" name="mobile_number" placeholder="Enter a customer's phone number"></input> <button className="button-color-1" type="submit">Find</button>
     </form>
     {reservations.length !== 0 ? <ListReservations reservations={reservations}/> : `No reservations found with this phone number`}
     </>

@@ -46,6 +46,8 @@ export default function EditReservationsComponent() {
       .catch((errors) => console.log("string", errors));
   };
 
+  const title = 'Edit Reservation'
+
   return (
     <Form
       submitHandler={submitHandler}
@@ -53,6 +55,7 @@ export default function EditReservationsComponent() {
       // newReservation={reservation}
       newReservation={newReservation}
       errors={errors}
+      title ={title}
     />
   );
 }

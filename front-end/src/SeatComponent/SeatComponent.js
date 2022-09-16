@@ -47,11 +47,11 @@ export default function SeatComponent() {
   const tablesForm = tables.map((table) => {
     // console.log("hello", table.reservation_id);
     return (
-      <>
+
         <option key={table.table_id} value={table.table_id}>
           {table.table_name} - {table.capacity}
         </option>
-      </>
+
     );
   });
 

@@ -17,7 +17,7 @@ export default function ListReservations({ reservations, loadDashboard }) {
 
     let {reservation_id, last_name, first_name, people, mobile_number, status, reservation_time, reservation_date} = reservation
     return (
-      <div key={reservation.reservation_id}>
+      <div key={reservation.reservation_id} className ="col border border-primary p-4  reservations mb-3" >
         <p>
           <b>Reservation Date</b> : {reservation_date}
         </p>
@@ -42,17 +42,17 @@ export default function ListReservations({ reservations, loadDashboard }) {
 
         { status!=='seated' ? 
         
-        <a href={`/reservations/${reservation_id}/seat`}><button>Seat</button></a> 
+        <a href={`/reservations/${reservation_id}/seat`}><button className="button-color-3 mr-1">Seat</button></a> 
 
         : null }
 
 
         <a href={`/reservations/${reservation_id}/edit`}>
-        <button>Edit</button>
+        <button className="button-color-2 mr-1">Edit</button>
         </a>
 
-        <button data-reservation-id-cancel={reservation.reservation_id} onClick={(e)=>onCancel(e,reservation)}>Cancel</button>
-        <hr />
+        <button className="button-color-1" data-reservation-id-cancel={reservation.reservation_id} onClick={(e)=>onCancel(e,reservation)}>Cancel</button>
+       
       </div>
     );
   });
