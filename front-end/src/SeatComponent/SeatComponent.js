@@ -57,15 +57,18 @@ export default function SeatComponent() {
 
   return (
     // <ListTablesComp tables={tables}/>
-    <form onSubmit={submitHandler}>
+    <form className="form" onSubmit={submitHandler}>
       <select name="table_id" value={tableId} onChange={handleChange}>
         {tablesForm}
         <option>none</option>
       </select>
-      <button type="submit">Submit</button>
-      <button type="button" onClick={() => history.goBack()}>
+      <div>
+      <button className="button-color-2" type="submit">Submit</button>
+      <button className="button-color-1" type="button" onClick={() => history.goBack()}>
+        
         Cancel
       </button>
+      </div>
       <ErrorAlert error={tablesError} />
     </form>
   );
