@@ -5,5 +5,10 @@
 The main focus of this application is to allow the user to easily manage guests. The main features include:
 1.Create: You can head to the top right of the dashboard and click "New Reservation" which will prompt a screen that allows you to create a detailed reservation:
 ![](front-end/restaurant_pics/restaurant_newreservation.jpg)
-### visit the website ###
+2.Edit: Once a reservation has been created you will be redirected to the dashboard page of the date of that reservation. The reservation card on that page will include options to seat, edit, or cancel your reservation.
+![](front-end/restaurant_pics/restaurant_dashboard.jpg)
+Upon clicking edit, will direct you to the initial form upon which you created the reservation, with all fields filled with current and editable information:
+![](front-end/restaurant_pics/restaurant_editreservation.jpg)
+
+
   
